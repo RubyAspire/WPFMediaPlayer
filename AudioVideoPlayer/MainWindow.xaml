@@ -1,0 +1,162 @@
+﻿<Window x:Class="AudioVideoPlayer.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:AudioVideoPlayer"
+        xmlns:coms="clr-namespace:AudioVideoPlayer.Commands"
+        mc:Ignorable="d" WindowStartupLocation="CenterScreen"
+        WindowStyle="None" AllowsTransparency="True" Background="Transparent"
+        Title="Media Player" Width="380" Height="380">
+    <Window.CommandBindings>
+        <CommandBinding Command="coms:CustomCommands.Open" CanExecute="Open_CanExecute" Executed="Open_Executed"/>
+        <CommandBinding Command="coms:CustomCommands.Exit" CanExecute="Exit_CanExecute" Executed="Exit_Executed"/>
+        <CommandBinding Command="coms:CustomCommands.Play" CanExecute="Play_CanExecute" Executed="Play_Executed"/>
+        <CommandBinding Command="coms:CustomCommands.Pause" CanExecute="Pause_CanExecute" Executed="Pause_Executed"/>
+        <CommandBinding Command="coms:CustomCommands.Stop" CanExecute="Stop_CanExecute" Executed="Stop_Executed"/>
+        <CommandBinding Command="coms:CustomCommands.Mute" CanExecute="Mute_CanExecute" Executed="Mute_Executed"/>
+    </Window.CommandBindings>
+
+    <Window.Resources>
+        <Image x:Key="Unmuted" Source="/Images/volume.png" Height="13" Width="13" />
+        <Image x:Key="Muted" Source="/Images/mute-volume-control.png"  Height="13" Width="13" />
+    </Window.Resources>
+    
+    <WindowChrome.WindowChrome>
+        <WindowChrome ResizeBorderThickness="5"
+                      CaptionHeight="0"
+                      GlassFrameThickness="0"/>
+    </WindowChrome.WindowChrome>
+    <Border BorderBrush="Black" BorderThickness="3">
+        <Grid Background="#222" x:Name="MainGrid">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            
+            <Grid Background="#333" x:Name="TitleBar"  MouseDown="TitleBar_MouseDown">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Menu Background="#333" Foreground="White" 
+                  Cursor="Hand" FontSize="13">
+                    <MenuItem Header="File" Padding="4">
+                        <MenuItem Command="coms:CustomCommands.Open"
+                          Foreground="Black" FontSize="13"/>
+                        <MenuItem Command="coms:CustomCommands.Exit"
+                          Foreground="Black" FontSize="13"/>
+                    </MenuItem>
+                </Menu>
+                <TextBlock x:Name="txtFileName" Foreground="#999" Grid.Column="1" 
+                           FontSize="13" Padding="5"/>
+                <WrapPanel Grid.Column="2" HorizontalAlignment="Right">
+                    <Button x:Name="btnMinimize"
+                            Content="__" Click="btnMinimize_Click"/>
+
+                    <Button x:Name="btnMaximize" FontWeight="Bold"
+                            Click="btnMaximize_Click">
+                        <Image Source="/Images/maximize-size-option.png" Width="12" Margin="0 3 0 0"/>
+                    </Button>
+                    <Button Command="coms:CustomCommands.Exit"
+                            Content=" X "  FontSize="15"/>
+                </WrapPanel>
+            </Grid>
+
+
+
+
+            <Image Grid.Row="1" x:Name="BackGroundImage" Stretch="UniformToFill" StretchDirection="UpOnly"/>
+
+            <Grid Grid.Row="1" x:Name="mediaGrid" >
+                <Grid.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Command="coms:CustomCommands.Open"/>
+                    </ContextMenu>
+                </Grid.ContextMenu>
+                <!--Setting loadedbehaviour to manual allows me to control the mediaelement
+            and set when to play pause and stop-->
+                <MediaElement x:Name="mediaPlayer" LoadedBehavior="Manual" />
+
+                <Image Visibility="Hidden" x:Name="imgDefault"/>
+            </Grid>
+
+            
+            <StatusBar Grid.Row="2" Background="#555">
+                <StatusBar.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                        </Grid>
+                    </ItemsPanelTemplate>
+                </StatusBar.ItemsPanel>
+                <WrapPanel>
+                    <TextBlock Text="00:00:00" FontSize="16" 
+                       Foreground="White" x:Name="txtTime"/>
+
+                    <TextBlock Text="/" FontSize="16" 
+                           Foreground="White"/>
+
+                    <TextBlock Text="00:00:00" FontSize="16" 
+                       Foreground="#888" x:Name="txtFullTime"/>
+                </WrapPanel>
+
+                <StatusBarItem Grid.Column="1" HorizontalContentAlignment="Stretch">
+                    <Slider x:Name="sliDuration" Thumb.DragCompleted="sliDuration_DragCompleted"
+                            IsMoveToPointEnabled="True"/>
+                </StatusBarItem>
+
+                <StatusBarItem Grid.Column="2">
+                    <Button x:Name="MuteButton" Command="coms:CustomCommands.Mute">
+                        <DynamicResource ResourceKey="Unmuted"/>
+                    </Button>
+                </StatusBarItem>
+                
+                <StatusBarItem Grid.Column="3" HorizontalContentAlignment="Stretch" Width="80">
+
+                    <Slider x:Name="sliVolume" Value="{Binding ElementName=mediaPlayer, Path=Volume}"
+                            Maximum="1" IsMoveToPointEnabled="True"/>
+                </StatusBarItem>
+            </StatusBar>
+
+            <StackPanel Grid.Row="3" Orientation="Horizontal" Background="#333">
+
+                <Button Padding="5" Focusable="False" 
+                        Command="coms:CustomCommands.Play">
+                    <Image Source="/Images/play-button-arrowhead.png"
+                           Height="11"/>
+                </Button>
+                <Button Padding="5" Focusable="False"
+                        Command="coms:CustomCommands.Pause">
+                    <Image Source="/Images/pause.png"
+                           Height="11"/>
+                </Button>
+                <Button Padding="5" Focusable="False"
+                        Command="coms:CustomCommands.Stop">
+                    <Image Source="/Images/stop.png"
+                           Height="11"/>
+                </Button>
+                <Button Content="Next" Name="BtnNext"
+                        Click="BtnNext_Click">
+                    
+                </Button>
+            </StackPanel>
+            
+        </Grid>
+    </Border>
+        
+ 
+    
+</Window>
+
+
