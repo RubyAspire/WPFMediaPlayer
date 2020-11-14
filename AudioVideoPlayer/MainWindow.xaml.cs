@@ -17,9 +17,9 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Threading;
 using Microsoft.Win32;
-using System.Drawing;
 using System.Windows.Media.Effects;
 using System.Windows.Automation;
+using System.Collections.ObjectModel;
 
 namespace AudioVideoPlayer
 {
@@ -28,10 +28,9 @@ namespace AudioVideoPlayer
     /// </summary>
     public partial class MainWindow : Window
     {
-        MediaPlayer audio = new MediaPlayer();
         bool isPlaying = false;
         int count = 0;
-        List<string> paths = new List<string>();
+        public static ObservableCollection<Files> paths = new ObservableCollection<Files>();
         public MainWindow()
         {
             InitializeComponent();
@@ -79,16 +78,24 @@ namespace AudioVideoPlayer
                     //mediaPlayer.Play();
                     if (count >= paths.Count)
                         count = 0;
-                    mediaPlayer.Source = new Uri(paths[count]);
-                    txtFileName.Text = Path.GetFileName(paths[count]);
+                    mediaPlayer.Source = new Uri(paths[count].FilePath);
+                    
                     //Mp3Image();
                 }
+                txtFileName.Text = paths[count].Filename;
+               
+                if (sliVolume.Value <= 0)
+                    MuteButton.Content = FindResource("Muted");
+                else
+                    MuteButton.Content = FindResource("Unmuted");
+
             }
         }
 
         private void Open_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
-            e.CanExecute = true;
+            if(isPlaying || !isPlaying)
+                e.CanExecute = true;
         }
 
         private void Open_Executed(object sender, ExecutedRoutedEventArgs e)
@@ -98,10 +105,17 @@ namespace AudioVideoPlayer
 
             if (fileDialog.ShowDialog() == true)
             {
+                count = 0;
                 paths.Clear();
                 foreach (var file in fileDialog.FileNames)
                 {
-                    paths.Add(file);
+                    var path = new Files()
+                    {
+                        Filename = Path.GetFileName(file),
+                        FilePath = file
+                    };
+                    paths.Add(path);
+                    
                 }
                 mediaPlayer.Source = new Uri(fileDialog.FileName);
                 txtFileName.Text = Path.GetFileName(fileDialog.FileName);
@@ -110,20 +124,15 @@ namespace AudioVideoPlayer
                     Mp3Image();
                     mediaPlayer.Visibility = Visibility.Hidden;
                     imgDefault.Visibility = Visibility.Visible;
-                    this.Height = 90;
-                    this.Width = 340;
                 }
                 else
                 {
-                    MainGrid.Background = new SolidColorBrush(System.Windows.Media.Color.FromRgb(34, 34, 34));
-                    BackGroundImage.Source = null;
                     mediaPlayer.Visibility = Visibility.Visible;
                     imgDefault.Visibility = Visibility.Hidden;
-                    this.Height = 380;
-                    this.Width = 380;
                 }
                 mediaPlayer.Play();
                 isPlaying = true;
+                lstPlaylist.ItemsSource = paths;
             }
             
         }
@@ -218,15 +227,9 @@ namespace AudioVideoPlayer
         private void Mute_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             if (sliVolume.Value > 0)
-            {
                 sliVolume.Value = 0;
-                MuteButton.Content = FindResource("Muted");
-            }
             else
-            {
                 sliVolume.Value = 0.5;
-                MuteButton.Content = FindResource("Unmuted");
-            }
         }
 
         private void BtnNext_Click(object sender, RoutedEventArgs e)
@@ -235,8 +238,8 @@ namespace AudioVideoPlayer
             if (count >= paths.Count)
                 count = 0;
 
-            mediaPlayer.Source = new Uri(paths[count]);
-            txtFileName.Text = Path.GetFileName(paths[count]);
+            mediaPlayer.Source = new Uri(paths[count].FilePath);
+            txtFileName.Text = paths[count].Filename;
             Mp3Image();
         }
 
@@ -259,13 +262,11 @@ namespace AudioVideoPlayer
 
         private void Mp3Image()
         {
-            TagLib.File file = TagLib.File.Create(paths[count]);//Path to audio file
+            TagLib.File file = TagLib.File.Create(paths[count].FilePath);//Path to audio file
 
             if (file.Tag.Pictures.Length == 0)
             {
                 imgDefault.Source = null;
-                MainGrid.Background = new SolidColorBrush(System.Windows.Media.Color.FromRgb(34, 34, 34));
-                BackGroundImage.Source = null;
             }
             else
             {
@@ -276,9 +277,71 @@ namespace AudioVideoPlayer
                 var bmp = BitmapFrame.Create(ms);
                 imgDefault.Source = bmp;
 
-                BackGroundImage.Source = bmp;
-                BackGroundImage.Effect = new BlurEffect() { Radius = 10 };
+            }
+        }
 
+        private void ViewPlaylist_Click(object sender, RoutedEventArgs e)
+        {
+            if (mediaGrid.ColumnDefinitions[2].Width == new GridLength(0))
+                mediaGrid.ColumnDefinitions[2].Width = new GridLength(150);
+            else
+                mediaGrid.ColumnDefinitions[2].Width = new GridLength(0);
+        }
+
+        private void TextBlock_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if(e.ClickCount == 2)
+            {
+                mediaPlayer.Source = new Uri(paths[lstPlaylist.SelectedIndex].FilePath);
+                count = lstPlaylist.SelectedIndex;
+                Mp3Image();
+            }
+        }
+
+        private void AddToPlaylist_Click(object sender, RoutedEventArgs e)
+        {
+            var fileDialog = new OpenFileDialog();
+            if (fileDialog.ShowDialog() == true)
+            {
+                foreach (var file in fileDialog.FileNames)
+                {
+                    var path = new Files()
+                    {
+                        Filename = Path.GetFileName(file),
+                        FilePath = file
+                    };
+                    paths.Add(path);
+                }
+            }
+        }
+
+        private void Window_KeyUp(object sender, KeyEventArgs e)
+        {
+            switch (e.Key)
+            {
+                case Key.Up:
+                    sliVolume.Value += 0.1;
+                    break;
+                case Key.Down:
+                    sliVolume.Value += -0.1;
+                    break;
+                case Key.Right:
+                    sliDuration.Value += 5;
+                    mediaPlayer.Position = TimeSpan.FromSeconds(sliDuration.Value);
+                    break;
+                case Key.Left:
+                    sliDuration.Value -= 5;
+                    mediaPlayer.Position = TimeSpan.FromSeconds(sliDuration.Value);
+                    break;
+                case Key.M:
+                    if (sliVolume.Value > 0)
+                        sliVolume.Value = 0;
+                    else
+                        sliVolume.Value = 0.5;
+                    break;
+                case Key.Enter:
+                    SwitchWindowState();
+                    break;
             }
         }
     }
