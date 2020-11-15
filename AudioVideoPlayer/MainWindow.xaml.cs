@@ -73,14 +73,14 @@ namespace AudioVideoPlayer
                 if (sliDuration.Value == sliDuration.Maximum)
                 {
                     count++;
+                    /*Will be for Repeat Functionality*/
                     //sliDuration.Value = 0;
                     //mediaPlayer.Stop();
                     //mediaPlayer.Play();
                     if (count >= paths.Count)
                         count = 0;
                     mediaPlayer.Source = new Uri(paths[count].FilePath);
-                    
-                    //Mp3Image();
+                    Mp3Image();
                 }
                 txtFileName.Text = paths[count].Filename;
                
@@ -147,7 +147,7 @@ namespace AudioVideoPlayer
             Application.Current.Shutdown();
         }
 
-        private void sliDuration_DragCompleted(object sender, DragCompletedEventArgs e)
+        private void SliDuration_DragCompleted(object sender, DragCompletedEventArgs e)
         {
             mediaPlayer.Position = TimeSpan.FromSeconds(sliDuration.Value);
         }
@@ -178,23 +178,25 @@ namespace AudioVideoPlayer
 
         private void Play_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            if (mediaPlayer.Source != null)
+            if (mediaPlayer.Source != null && mediaPlayer.NaturalDuration.HasTimeSpan)
             {
                 mediaPlayer.Play();
                 isPlaying = true;
+
+                if (mediaPlayer.Position.TotalSeconds == mediaPlayer.NaturalDuration.TimeSpan.TotalSeconds)
+                {
+                    mediaPlayer.Stop();
+                }
             }
-            if (mediaPlayer.Position.TotalSeconds == mediaPlayer.NaturalDuration.TimeSpan.TotalSeconds)
-            {
-                mediaPlayer.Stop();
-            }
+            
         }
 
-        private void btnMinimize_Click(object sender, RoutedEventArgs e)
+        private void BtnMinimize_Click(object sender, RoutedEventArgs e)
         {
             this.WindowState = WindowState.Minimized;
         }
 
-        private void btnMaximize_Click(object sender, RoutedEventArgs e)
+        private void BtnMaximize_Click(object sender, RoutedEventArgs e)
         {
             SwitchWindowState();
         }
@@ -232,15 +234,30 @@ namespace AudioVideoPlayer
                 sliVolume.Value = 0.5;
         }
 
-        private void BtnNext_Click(object sender, RoutedEventArgs e)
+        private void BtnSeeking_Click(object sender, RoutedEventArgs e)
         {
-            count++;
-            if (count >= paths.Count)
-                count = 0;
+            var button = sender as Button;
+            if (button.Name == "BtnNext")
+            {
+                count++;
+                if (count >= paths.Count)
+                    count = 0;
 
-            mediaPlayer.Source = new Uri(paths[count].FilePath);
-            txtFileName.Text = paths[count].Filename;
-            Mp3Image();
+                mediaPlayer.Source = new Uri(paths[count].FilePath);
+                txtFileName.Text = paths[count].Filename;
+                Mp3Image();
+            }
+            else if (button.Name == "BtnPrevious")
+            {
+                count--;
+                if (count < 0)
+                    count = paths.Count - 1;
+
+                mediaPlayer.Source = new Uri(paths[count].FilePath);
+                txtFileName.Text = paths[count].Filename;
+                Mp3Image();
+            }
+            
         }
 
         private void SwitchWindowState()
@@ -288,7 +305,7 @@ namespace AudioVideoPlayer
                 mediaGrid.ColumnDefinitions[2].Width = new GridLength(0);
         }
 
-        private void TextBlock_MouseDown(object sender, MouseButtonEventArgs e)
+        private void PlaylistItem_MouseDown(object sender, MouseButtonEventArgs e)
         {
             if(e.ClickCount == 2)
             {

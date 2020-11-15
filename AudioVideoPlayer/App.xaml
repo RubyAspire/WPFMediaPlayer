@@ -8,7 +8,7 @@
         <Style TargetType="MenuItem">
             <Setter Property="Cursor" Value="Hand"/>
         </Style>
-    
+
         <Style TargetType="{x:Type Button}">
             <Setter Property="Cursor" Value="Hand"/>
             <Setter Property="Foreground" Value="White"/>
@@ -18,7 +18,8 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
-                        <Border Background="{TemplateBinding Background}"  Padding="5"><!--Represents the button-->
+                        <Border Background="{TemplateBinding Background}"  Padding="5">
+                            <!--Represents the button-->
                             <ContentPresenter   HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
                         </Border>
                     </ControlTemplate>
@@ -31,53 +32,7 @@
             </Style.Triggers>
         </Style>
 
-        <!--<Style x:Key="thumbStyle" TargetType="Thumb">
-            <Setter Property="Width" Value="50"/>
-            <Setter Property="SnapsToDevicePixels" Value="True"/>
-            <Setter Property="OverridesDefaultStyle" Value="False"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Thumb">
-                        <Ellipse Height="15" Width="15" Fill="MediumPurple"/>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-            
-        </Style>-->
-
-        <!--<Style TargetType="Slider">
-            <Setter Property="OverridesDefaultStyle" Value="True"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Slider">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
-                            
-                            <Border BorderThickness="1" Padding="1" Background="Gray"
-                                    Height="{TemplateBinding Height}" Width="Auto"
-                                    HorizontalAlignment="Stretch" VerticalAlignment="Center" 
-                                    Grid.Column="0" Grid.Row="0"/>
-                            <Track Height="{TemplateBinding Height}" Width="{TemplateBinding Width}"
-                                   HorizontalAlignment="Stretch" VerticalAlignment="Center"
-                                   Grid.Column="0" Grid.Row="0">
-                                <Track.Thumb>
-                                    <Thumb Style="{StaticResource thumbStyle}"/>
-                                </Track.Thumb>
-                            </Track>
-                            
-                            
-                        </Grid>
-                        
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>-->
-
+        <!--Button for the left side of the slider thumb-->
         <Style x:Key="SliderRepeatButton" TargetType="RepeatButton">
             <Setter Property="SnapsToDevicePixels" Value="true" />
             <Setter Property="OverridesDefaultStyle" Value="true" />
@@ -92,6 +47,7 @@
             </Setter>
         </Style>
 
+        <!--Button for the right side of the slider thumb-->
         <Style x:Key="SliderRepeatButton1" TargetType="RepeatButton">
             <Setter Property="SnapsToDevicePixels" Value="true" />
             <Setter Property="OverridesDefaultStyle" Value="true" />
@@ -103,7 +59,8 @@
                 </Setter.Value>
             </Setter>
         </Style>
-
+        
+        <!--Slider thumb style-->
         <Style x:Key="SliderThumb" TargetType="Thumb">
             <Setter Property="SnapsToDevicePixels" Value="true" />
             <Setter Property="OverridesDefaultStyle" Value="true" />
@@ -115,7 +72,8 @@
                 </Setter.Value>
             </Setter>
         </Style>
-
+        
+        <!--Placing the 2 buttons and thumb style to the slider style-->
         <Style TargetType="Slider">
             <Setter Property="Template">
                 <Setter.Value>
@@ -141,25 +99,7 @@
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
-            
         </Style>
-
-        <!--<Style TargetType="ListView">
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="ListView">
-                        <Border BorderBrush="Black">
-                            <ListView>
-                                <ListView.ItemTemplate>
-                                    <DataTemplate>
-                                        <TextBlock/>
-                                    </DataTemplate>
-                                </ListView.ItemTemplate>
-                            </ListView>
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>-->
+        
     </Application.Resources>
 </Application>

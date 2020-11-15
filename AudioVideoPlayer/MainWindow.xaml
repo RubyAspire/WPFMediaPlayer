@@ -53,11 +53,11 @@
                            FontSize="15" Padding="5" Grid.Row="1"/>
                 
                 <WrapPanel Grid.Column="2" HorizontalAlignment="Right">
-                    <Button x:Name="btnMinimize"
-                            Content="__" Click="btnMinimize_Click"/>
+                    <Button x:Name="BtnMinimize"
+                            Content="__" Click="BtnMinimize_Click"/>
 
                     <Button x:Name="btnMaximize" FontWeight="Bold"
-                            Click="btnMaximize_Click">
+                            Click="BtnMaximize_Click">
                         <Image Source="/Images/maximize-size-option.png" Width="12" Margin="0 3 0 0"/>
                     </Button>
                     <Button Command="coms:CustomCommands.Exit"
@@ -118,7 +118,7 @@
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Text="{Binding Filename}" MouseDown="TextBlock_MouseDown"/>
+                                <TextBlock Text="{Binding Filename}" MouseDown="PlaylistItem_MouseDown"/>
                             </Grid>
                             
                         </DataTemplate>
@@ -152,7 +152,7 @@
                 </WrapPanel>
 
                 <StatusBarItem Grid.Column="1" HorizontalContentAlignment="Stretch">
-                    <Slider x:Name="sliDuration" Thumb.DragCompleted="sliDuration_DragCompleted"
+                    <Slider x:Name="sliDuration" Thumb.DragCompleted="SliDuration_DragCompleted"
                             IsMoveToPointEnabled="True"/>
                 </StatusBarItem>
 
@@ -170,7 +170,9 @@
             </StatusBar>
 
             <StackPanel Grid.Row="4" Orientation="Horizontal" Background="#333">
-
+                <Button Name="BtnPrevious" Click="BtnSeeking_Click">
+                    <Image Source="/Images/Previous.png" Height="23"/>
+                </Button>
                 <Button Padding="5" Focusable="False" 
                         Command="coms:CustomCommands.Play">
                     <Image Source="/Images/play-button-arrowhead.png"
@@ -186,9 +188,9 @@
                     <Image Source="/Images/stop.png"
                            Height="11"/>
                 </Button>
-                <Button Content="{Binding Height}" Name="BtnNext"
-                        Click="BtnNext_Click">
-                    
+                <Button Name="BtnNext"
+                        Click="BtnSeeking_Click">
+                    <Image Source="/Images/Next.png" Height="20"/>
                 </Button>
             </StackPanel>
             

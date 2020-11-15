@@ -9,8 +9,10 @@
   <ItemGroup>
     <None Remove="Images\maximize-size-option.png" />
     <None Remove="Images\mute-volume-control.png" />
+    <None Remove="Images\Next.png" />
     <None Remove="Images\pause.png" />
     <None Remove="Images\play-button-arrowhead.png" />
+    <None Remove="Images\Previous.png" />
     <None Remove="Images\stop.png" />
     <None Remove="Images\volume.png" />
   </ItemGroup>
@@ -27,10 +29,16 @@
     <Resource Include="Images\mute-volume-control.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="Images\Next.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Images\pause.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Images\play-button-arrowhead.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Images\Previous.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Images\stop.png">

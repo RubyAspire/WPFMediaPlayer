@@ -5,6 +5,7 @@ C:\Users\Ruby\source\repos\AudioVideoPlayer\AudioVideoPlayer\bin\Debug\netcoreap
 C:\Users\Ruby\source\repos\AudioVideoPlayer\AudioVideoPlayer\bin\Debug\netcoreapp3.1\AudioVideoPlayer.dll
 C:\Users\Ruby\source\repos\AudioVideoPlayer\AudioVideoPlayer\bin\Debug\netcoreapp3.1\AudioVideoPlayer.pdb
 C:\Users\Ruby\source\repos\AudioVideoPlayer\AudioVideoPlayer\bin\Debug\netcoreapp3.1\TagLibSharp.dll
+C:\Users\Ruby\source\repos\AudioVideoPlayer\AudioVideoPlayer\obj\Debug\netcoreapp3.1\AudioVideoPlayer.csprojAssemblyReference.cache
 C:\Users\Ruby\source\repos\AudioVideoPlayer\AudioVideoPlayer\obj\Debug\netcoreapp3.1\MainWindow.g.cs
 C:\Users\Ruby\source\repos\AudioVideoPlayer\AudioVideoPlayer\obj\Debug\netcoreapp3.1\App.g.cs
 C:\Users\Ruby\source\repos\AudioVideoPlayer\AudioVideoPlayer\obj\Debug\netcoreapp3.1\AudioVideoPlayer_MarkupCompile.cache
@@ -19,4 +20,3 @@ C:\Users\Ruby\source\repos\AudioVideoPlayer\AudioVideoPlayer\obj\Debug\netcoreap
 C:\Users\Ruby\source\repos\AudioVideoPlayer\AudioVideoPlayer\obj\Debug\netcoreapp3.1\AudioVideoPlayer.dll
 C:\Users\Ruby\source\repos\AudioVideoPlayer\AudioVideoPlayer\obj\Debug\netcoreapp3.1\AudioVideoPlayer.pdb
 C:\Users\Ruby\source\repos\AudioVideoPlayer\AudioVideoPlayer\obj\Debug\netcoreapp3.1\AudioVideoPlayer.genruntimeconfig.cache
-C:\Users\Ruby\source\repos\AudioVideoPlayer\AudioVideoPlayer\obj\Debug\netcoreapp3.1\AudioVideoPlayer.csprojAssemblyReference.cache
