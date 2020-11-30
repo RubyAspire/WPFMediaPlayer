@@ -1,13 +1,14 @@
 {
   "version": 2,
-  "dgSpecHash": "/8hJrmAM0oXLITc5Z5Pv3pvputBj+RKgyQKB7xkREe+4g6l4Y9wEkyPEaMJGrJUdo7AW2kDOEVkN0VaTAr2Z7w==",
+  "dgSpecHash": "J5zAibkzDIto6bLvsBf2CV6gKQ7ytggQIbXFIXwZYqUBgBS0LsyEGoJ1Fgk5H3asFXAD7hDTdQLgOVBwdVUV9w==",
   "success": true,
   "projectFilePath": "C:\\Users\\Ruby\\source\\repos\\AudioVideoPlayer\\AudioVideoPlayer\\AudioVideoPlayer.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Ruby\\.nuget\\packages\\microsoft.netcore.platforms\\3.1.0\\microsoft.netcore.platforms.3.1.0.nupkg.sha512",
     "C:\\Users\\Ruby\\.nuget\\packages\\microsoft.win32.systemevents\\4.7.0\\microsoft.win32.systemevents.4.7.0.nupkg.sha512",
     "C:\\Users\\Ruby\\.nuget\\packages\\system.drawing.common\\4.7.0\\system.drawing.common.4.7.0.nupkg.sha512",
-    "C:\\Users\\Ruby\\.nuget\\packages\\taglibsharp\\2.2.0\\taglibsharp.2.2.0.nupkg.sha512"
+    "C:\\Users\\Ruby\\.nuget\\packages\\taglibsharp\\2.2.0\\taglibsharp.2.2.0.nupkg.sha512",
+    "C:\\Users\\Ruby\\.nuget\\packages\\microsoft.netcore.app.host.win-x86\\3.1.7\\microsoft.netcore.app.host.win-x86.3.1.7.nupkg.sha512"
   ],
   "logs": []
 }

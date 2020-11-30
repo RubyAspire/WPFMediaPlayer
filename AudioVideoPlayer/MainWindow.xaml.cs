@@ -30,7 +30,8 @@ namespace AudioVideoPlayer
     {
         bool isPlaying = false;
         int count = 0;
-        public static ObservableCollection<Files> paths = new ObservableCollection<Files>();
+        private string[] audioExtensions = { ".mp3", ".ogg", ".m4a"};
+        public ObservableCollection<Files> paths = new ObservableCollection<Files>();
         public MainWindow()
         {
             InitializeComponent();
@@ -73,10 +74,12 @@ namespace AudioVideoPlayer
                 if (sliDuration.Value == sliDuration.Maximum)
                 {
                     count++;
+
                     /*Will be for Repeat Functionality*/
                     //sliDuration.Value = 0;
                     //mediaPlayer.Stop();
                     //mediaPlayer.Play();
+
                     if (count >= paths.Count)
                         count = 0;
                     mediaPlayer.Source = new Uri(paths[count].FilePath);
@@ -91,10 +94,15 @@ namespace AudioVideoPlayer
 
             }
         }
+        private void SliDuration_DragCompleted(object sender, DragCompletedEventArgs e)
+        {
+            mediaPlayer.Position = TimeSpan.FromSeconds(sliDuration.Value);
+        }
 
+        #region Commands
         private void Open_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
-            if(isPlaying || !isPlaying)
+            if (isPlaying || !isPlaying)
                 e.CanExecute = true;
         }
 
@@ -115,7 +123,6 @@ namespace AudioVideoPlayer
                         FilePath = file
                     };
                     paths.Add(path);
-                    
                 }
                 mediaPlayer.Source = new Uri(fileDialog.FileName);
                 txtFileName.Text = Path.GetFileName(fileDialog.FileName);
@@ -134,7 +141,7 @@ namespace AudioVideoPlayer
                 isPlaying = true;
                 lstPlaylist.ItemsSource = paths;
             }
-            
+
         }
 
         private void Exit_CanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -145,11 +152,6 @@ namespace AudioVideoPlayer
         private void Exit_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             Application.Current.Shutdown();
-        }
-
-        private void SliDuration_DragCompleted(object sender, DragCompletedEventArgs e)
-        {
-            mediaPlayer.Position = TimeSpan.FromSeconds(sliDuration.Value);
         }
 
         private void Pause_CanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -188,26 +190,7 @@ namespace AudioVideoPlayer
                     mediaPlayer.Stop();
                 }
             }
-            
-        }
 
-        private void BtnMinimize_Click(object sender, RoutedEventArgs e)
-        {
-            this.WindowState = WindowState.Minimized;
-        }
-
-        private void BtnMaximize_Click(object sender, RoutedEventArgs e)
-        {
-            SwitchWindowState();
-        }
-
-        private void TitleBar_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            if (e.LeftButton == MouseButtonState.Pressed && e.MouseDevice.Captured == null)
-                this.DragMove();
-
-            if (e.ClickCount == 2)
-                SwitchWindowState();
         }
 
         private void Stop_CanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -233,33 +216,66 @@ namespace AudioVideoPlayer
             else
                 sliVolume.Value = 0.5;
         }
+        #endregion
 
+        private void BtnMinimize_Click(object sender, RoutedEventArgs e)
+        {
+            this.WindowState = WindowState.Minimized;
+        }
+
+        private void BtnMaximize_Click(object sender, RoutedEventArgs e)
+        {
+            SwitchWindowState();
+        }
+
+        private void TitleBar_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.LeftButton == MouseButtonState.Pressed && e.MouseDevice.Captured == null)
+                this.DragMove();
+
+            if (e.ClickCount == 2)
+                SwitchWindowState();
+        }
+
+        /// <summary>
+        /// Click Event for seeking between playlist items 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void BtnSeeking_Click(object sender, RoutedEventArgs e)
         {
             var button = sender as Button;
             if (button.Name == "BtnNext")
             {
-                count++;
-                if (count >= paths.Count)
-                    count = 0;
+                if (mediaPlayer.Source != null && mediaPlayer.NaturalDuration.HasTimeSpan)
+                {
+                    count++;
+                    if (count >= paths.Count)
+                        count = 0;
 
-                mediaPlayer.Source = new Uri(paths[count].FilePath);
-                txtFileName.Text = paths[count].Filename;
-                Mp3Image();
+                    mediaPlayer.Source = new Uri(paths[count].FilePath);
+                    txtFileName.Text = paths[count].Filename;
+                    Mp3Image();
+                }
             }
             else if (button.Name == "BtnPrevious")
             {
-                count--;
-                if (count < 0)
-                    count = paths.Count - 1;
+                if (mediaPlayer.Source != null && mediaPlayer.NaturalDuration.HasTimeSpan)
+                {
+                    count--;
+                    if (count < 0)
+                        count = paths.Count - 1;
 
-                mediaPlayer.Source = new Uri(paths[count].FilePath);
-                txtFileName.Text = paths[count].Filename;
-                Mp3Image();
-            }
-            
+                    mediaPlayer.Source = new Uri(paths[count].FilePath);
+                    txtFileName.Text = paths[count].Filename;
+                    Mp3Image();
+                }     
+            }         
         }
 
+        /// <summary>
+        /// Method for switching between WindowStates
+        /// </summary>
         private void SwitchWindowState()
         {
             switch (WindowState)
@@ -277,6 +293,9 @@ namespace AudioVideoPlayer
             }
         }
 
+        /// <summary>
+        /// Method for displaying Mp3 file image
+        /// </summary>
         private void Mp3Image()
         {
             TagLib.File file = TagLib.File.Create(paths[count].FilePath);//Path to audio file
@@ -284,6 +303,7 @@ namespace AudioVideoPlayer
             if (file.Tag.Pictures.Length == 0)
             {
                 imgDefault.Source = null;
+                mediaPlayer.Visibility = Visibility.Visible;
             }
             else
             {
@@ -293,9 +313,23 @@ namespace AudioVideoPlayer
 
                 var bmp = BitmapFrame.Create(ms);
                 imgDefault.Source = bmp;
+                
+                mediaPlayer.Visibility = Visibility.Hidden;
+            }
+            bool IsAudio = false;
+            foreach (var extension in audioExtensions)
+            {
+                if (Path.GetExtension(paths[count].FilePath) == extension)
+                   IsAudio = true;
+            }
 
+            if (IsAudio == false)
+            {
+                imgDefault.Source = null;
+                mediaPlayer.Visibility = Visibility.Visible;
             }
         }
+
 
         private void ViewPlaylist_Click(object sender, RoutedEventArgs e)
         {
@@ -305,6 +339,11 @@ namespace AudioVideoPlayer
                 mediaGrid.ColumnDefinitions[2].Width = new GridLength(0);
         }
 
+        /// <summary>
+        /// MouseDown Event for playlist items to change the source of the mediaelement
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void PlaylistItem_MouseDown(object sender, MouseButtonEventArgs e)
         {
             if(e.ClickCount == 2)
@@ -315,6 +354,11 @@ namespace AudioVideoPlayer
             }
         }
 
+        /// <summary>
+        /// Click Event to add file to playlist
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void AddToPlaylist_Click(object sender, RoutedEventArgs e)
         {
             var fileDialog = new OpenFileDialog();
@@ -332,6 +376,11 @@ namespace AudioVideoPlayer
             }
         }
 
+        /// <summary>
+        /// Keys for control of the media player
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Window_KeyUp(object sender, KeyEventArgs e)
         {
             switch (e.Key)

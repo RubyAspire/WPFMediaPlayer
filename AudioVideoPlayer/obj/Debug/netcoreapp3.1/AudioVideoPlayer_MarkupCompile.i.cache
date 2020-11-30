@@ -8,7 +8,7 @@ C:\Users\Ruby\source\repos\AudioVideoPlayer\AudioVideoPlayer\obj\Debug\netcoreap
 AudioVideoPlayer
 none
 false
-TRACE;DEBUG;NETCOREAPP;NETCOREAPP3_1
+TRACE;DEBUG;NETCOREAPP;NETCOREAPP3_1;
 C:\Users\Ruby\source\repos\AudioVideoPlayer\AudioVideoPlayer\App.xaml
 11151548125
 
@@ -16,5 +16,5 @@ C:\Users\Ruby\source\repos\AudioVideoPlayer\AudioVideoPlayer\App.xaml
 194-2146572135
 MainWindow.xaml;
 
-False
+True
 
